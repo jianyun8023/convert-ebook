@@ -1,8 +1,12 @@
-# Convert-ebook
+# Convert-ebook 
+[![Build Status][build-img-master]][travis-ci]
+[![Build Status][build-img-master]][appveyor]
+[![GitHub release][release-img]][latest-release]
 
 >使用python3编写的电子书格式转换工具,
 将未加解密的azw3格式无损转换epub,mobi
 > 支持MacOS、Windows、Linux平台。
+
 
 ## 使用的开源工具
 - [kindleunpack](https://github.com/kevinhendricks/KindleUnpack) 转换azw3为epub
