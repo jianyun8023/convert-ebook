@@ -1,0 +1,47 @@
+environment:
+  matrix:
+    - PYTHON: "C:\\Python36"
+      PYTHON_VERSION: "3.6.x" # currently 3.6.5
+      PYTHON_ARCH: "32"
+install:
+  - ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER -and $env:APPVEYOR_BUILD_NUMBER -ne ((Invoke-RestMethod `
+      https://ci.appveyor.com/api/projects/$env:APPVEYOR_ACCOUNT_NAME/$env:APPVEYOR_PROJECT_SLUG/history?recordsNumber=50).builds | `
+      Where-Object pullRequestId -eq $env:APPVEYOR_PULL_REQUEST_NUMBER)[0].buildNumber) { `
+      throw "There are newer queued builds for this pull request, failing early." }
+  - ECHO "Filesystem root:"
+  - ps: "ls \"C:/\""
+
+  - ECHO "Installed SDKs:"
+  - ps: "ls \"C:/Program Files/Microsoft SDKs/Windows\""
+
+  # Install Python (from the official .msi of https://python.org) and pip when
+  # not already installed.
+  - ps: if (-not(Test-Path($env:PYTHON))) { & appveyor\install.ps1 }
+
+  # Prepend newly installed Python to the PATH of this build (this cannot be
+  # done from inside the powershell script as it would require to restart
+  # the parent CMD process).
+  - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
+  - "python -m pip install --upgrade pip"
+  - "%CMD_IN_ENV% pip install pyinstaller"
+  - "%CMD_IN_ENV% pip install threadpool"
+branches:
+  only:
+    - master
+build_script:
+  # Build the compiled extension
+  - ps: "ls"
+  - "%CMD_IN_ENV% pyinstaller ./convert-ebook.py -F --add-data lib/kindlegen;lib/kindlegen"
+test_script:
+  - ps: "ls dist"
+artifacts:
+  - path: dist/*.exe
+deploy:
+  - provider: GitHub
+    auth_token:
+      secure: Iw3T58CTmwWRa79KqeIZ/ZE9qXBQD2mTaIa4mK3Hp/4id+igJqEC4GePD5MhCAxS
+    prerelease: false
+    force_update: true
+    on:
+      branch: master
+      APPVEYOR_REPO_TAG: true

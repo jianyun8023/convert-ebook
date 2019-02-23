@@ -1,0 +1,35 @@
+sudo: required
+matrix:
+  include:
+    - os: osx
+      language: generic
+    - os: linux
+language: python
+python:
+  - "3.5.1"
+before_install: |
+  if [ "$TRAVIS_OS_NAME" == "osx" ]; then
+    alias python=$(which python3)
+    alias pip=$(which pip3)
+    which python3
+    which pip3
+    sudo ln -f $(which python3) $(which python)
+    sudo ln -f $(which pip3) $(which pip)
+    python --version
+  fi
+install:
+  - pip install pyinstaller
+
+script:
+  - pyinstaller ./convert-ebook.py -F --add-data ./lib/kindlegen:lib/kindlegen
+  - mv ./dist/convert-ebook ./dist/convert-ebook-$TRAVIS_OS_NAME
+
+deploy:
+  provider: releases
+  file: "dist/convert-ebook-$TRAVIS_OS_NAME"
+  api_key: $api_key
+  skip_cleanup: true
+  overwrite: true
+  on:
+    branch: master
+    tags: true
