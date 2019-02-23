@@ -1,7 +1,6 @@
 # Convert-ebook 
 [![Build Status][travis-ci]][travis-ci]
 [![Build Status][appveyor]][appveyor]
-[![GitHub release][latest-release]][latest-release]
 
 >使用python3编写的电子书格式转换工具,
 将未加解密的azw3格式无损转换epub,mobi
