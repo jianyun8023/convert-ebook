@@ -5,8 +5,8 @@
 > 支持MacOS、Windows、Linux平台。
 
 ## 使用的开源工具
-- kindleunpack 转换azw3为epub
-- kindlegen 转换epub为mobi
+- [kindleunpack](https://github.com/kevinhendricks/KindleUnpack) 转换azw3为epub
+- [kindlegen](http://www.amazon.com/gp/feature.html?docId=1000765211) 转换epub为mobi
 
 ## 使用方式
   
