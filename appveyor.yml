@@ -25,9 +25,6 @@ install:
   - "python -m pip install --upgrade pip"
   - "%CMD_IN_ENV% pip install pyinstaller"
   - "%CMD_IN_ENV% pip install threadpool"
-branches:
-  only:
-    - master
 build_script:
   # Build the compiled extension
   - ps: "ls"
