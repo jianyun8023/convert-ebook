@@ -157,6 +157,11 @@ def convert(file_path, tmp):
 
 
 def list_file(path, filter, call_back):
+    if os.path.isfile(path):
+        if filter(path):
+            call_back(path)
+        return
+
     for filename in os.listdir(path):
         file_path = os.path.join(path, filename)
         if os.path.isdir(file_path):
@@ -168,11 +173,11 @@ def list_file(path, filter, call_back):
 
 if __name__ == '__main__':
     if not len(sys.argv) > 1:
-        print_log("请输入扫描路径")
+        print_log("请输入扫描路径或文件")
         exit(1)
     file_source = sys.argv[1]
 
-    print_log("扫描文件路径" + file_source)
+    print_log("请输入扫描路径或文件 " + file_source)
 
     pool = threadpool.ThreadPool(cpu_count() * 2)
 

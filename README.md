@@ -1,7 +1,7 @@
 # Convert-ebook 
-[![Build Status][build-img-master]][travis-ci]
-[![Build Status][build-img-master]][appveyor]
-[![GitHub release][release-img]][latest-release]
+[![Build Status][travis-ci]][travis-ci]
+[![Build Status][appveyor]][appveyor]
+[![GitHub release][latest-release]][latest-release]
 
 >使用python3编写的电子书格式转换工具,
 将未加解密的azw3格式无损转换epub,mobi
@@ -18,15 +18,15 @@
   
   ### Windows
   
-  - 直接拖动文件夹到convert-ebook.exe文件上即可执行
-  - 命令行下使用 `./convert-ebook.exe 文件目录`
+  - 直接拖动文件或文件夹到convert-ebook.exe文件上即可执行
+  - 命令行下使用 `./convert-ebook.exe 文件或目录`
   
   ### macOS
   
   在终端中输入
   ```bash
   chmod +x ./convert-ebook-macos
-  ./convert-ebook-macos '文件目录'
+  ./convert-ebook-macos '文件或目录'
   ```
   
   ### Linux
@@ -35,7 +35,7 @@
   
    ```bash
    chmod +x ./convert-ebook-macos
-    ./convert-ebook-linux '文件目录'
+    ./convert-ebook-linux '文件或目录'
    ```
   
   ### 使用源码
@@ -49,7 +49,7 @@
  
 请使用python3运行脚本，未做python2的支持
  
- 执行脚本后，会扫描该目录下所有的azw3文件（包括子目录），并执行转换。转换后的文件会写入到azw3所在的目录。如果写入时已经存在同名文件，旧文件会被覆盖掉。
+ 执行脚本后，会扫描该文件或该目录下所有的azw3文件（包括子目录），并执行转换。转换后的文件会写入到azw3所在的目录。如果写入时已经存在同名文件，旧文件会被覆盖掉。
  **默认同时处理cpu核心数*2个转换任务**
 
 
@@ -58,3 +58,6 @@
 - 暂未支持kindleunpack转换epub配置epub v2、v3、auto等参数
 
  
+[latest-release]: https://github.com/Yihy/convert-ebook/releases/latest?svg=true
+[travis-ci]: https://travis-ci.org/Yihy/convert-ebook.svg?branch=master
+[appveyor]: https://ci.appveyor.com/api/projects/status/hsl74dpd01y3rsht?svg=true
