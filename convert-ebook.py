@@ -6,6 +6,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 import uuid
 from multiprocessing import cpu_count
 
@@ -19,7 +20,8 @@ tmp_dir = os.path.join(tempfile.gettempdir(), "convert_ebook")
 
 
 def print_log(log):
-    print(log)
+    date_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+    print(date_time + ' ' + log)
 
 
 def kindle_gen_bin():
@@ -36,7 +38,7 @@ def kindle_gen_bin():
 
 def run_bash(command):
     # print_log(command)
-    return subprocess.call(command, shell=True, stdout=subprocess.PIPE)
+    return subprocess.call(command, shell=True,stdout=subprocess.DEVNULL)
 
 
 def file_del(path):
@@ -131,6 +133,10 @@ def convert(file_path, tmp):
     is_azw3 = str(file_path).lower().endswith(".azw3")
 
     file_source_suffix = ".azw3" if is_azw3 else file_path[file_path.rfind("."):]
+
+    if epub_file:
+        file_copy(epub_file, file_path.replace(file_source_suffix, ".epub"))
+
     mobi_file = None
     if epub_file and is_azw3:
         print_log("转换epub到mobi [%s]" % epub_file)
@@ -138,8 +144,7 @@ def convert(file_path, tmp):
 
     # print_log(epub_file)
     # print_log(mobi_file)
-    if epub_file:
-        file_copy(epub_file, file_path.replace(file_source_suffix, ".epub"))
+
     if mobi_file:
         file_copy(mobi_file, file_path.replace(file_source_suffix, ".mobi"))
 
