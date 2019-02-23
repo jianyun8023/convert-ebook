@@ -9,19 +9,24 @@
 - kindlegen 转换epub为mobi
 
 ## 使用方式
-
- 命令`python ./convert-ebook.py [文件存放目录]`
- 
- 比如：`python ./convert-ebook.py /doc/ebook/`
+  
+  
+  ```bash
+  # 第一次需要安装 threadpool
+  pip install threadpool
+  # 运行转换
+  python ./convert-ebook.py "/doc/ebook/"
+  ```
+ 如果不能使用`pip install threadpool`安装，请访问[threadpool主页](https://chrisarndt.de/projects/threadpool/)进行下载安装
  
 请使用python3运行脚本，未做python2的支持
  
- 执行脚本后，会扫描该目录下所有的azw3文件（包括子目录），并执行转换。转换后的文件会写入到azw3所在的目录。如果写入时已经存在同名文件，源文件会被覆盖掉
+ 执行脚本后，会扫描该目录下所有的azw3文件（包括子目录），并执行转换。转换后的文件会写入到azw3所在的目录。如果写入时已经存在同名文件，旧文件会被覆盖掉。
+ **默认同时处理cpu核心数*2个转换任务**
 
 
 ## 问题
 - 暂不支持epub直接转mobi，kindlegen转epub可能会导致输出的mobi文件中文乱码，暂未找到解决办法
 - 暂未支持kindleunpack转换epub配置epub v2、v3、auto等参数
-- 未支持多线程并发处理
 
  
