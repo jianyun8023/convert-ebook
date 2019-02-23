@@ -10,7 +10,31 @@
 
 ## 使用方式
   
+  在[release](https://github.com/Yihy/convert-ebook/releases)页面下载对应您操作系统的包
   
+  ### Windows
+  
+  - 直接拖动文件夹到convert-ebook.exe文件上即可执行
+  - 命令行下使用 `./convert-ebook.exe 文件目录`
+  
+  ### macOS
+  
+  在终端中输入
+  ```bash
+  chmod +x ./convert-ebook-macos
+  ./convert-ebook-macos '文件目录'
+  ```
+  
+  ### Linux
+  
+  同样在终端中输入
+  
+   ```bash
+   chmod +x ./convert-ebook-macos
+    ./convert-ebook-linux '文件目录'
+   ```
+  
+  ### 使用源码
   ```bash
   # 第一次需要安装 threadpool
   pip install threadpool
