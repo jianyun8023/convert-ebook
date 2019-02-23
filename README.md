@@ -22,5 +22,6 @@
 ## 问题
 - 暂不支持epub直接转mobi，kindlegen转epub可能会导致输出的mobi文件中文乱码，暂未找到解决办法
 - 暂未支持kindleunpack转换epub配置epub v2、v3、auto等参数
+- 未支持多线程并发处理
 
  
