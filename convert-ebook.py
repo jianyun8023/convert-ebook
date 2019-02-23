@@ -18,6 +18,13 @@ from lib.mobi_sectioner import Sectionizer
 
 tmp_dir = os.path.join(tempfile.gettempdir(), "convert_ebook")
 
+if getattr(sys, 'frozen', False):
+    # we are running in a bundle
+    bundle_dir = sys._MEIPASS
+else:
+    # we are running in a normal Python environment
+    bundle_dir = os.path.dirname(os.path.abspath(__file__))
+
 
 def print_log(log):
     date_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
@@ -27,18 +34,18 @@ def print_log(log):
 def kindle_gen_bin():
     system_name = platform.system()
     if system_name == "Windows":
-        return os.path.abspath("lib/kindlegen/kindlegen.exe")
+        return os.path.abspath(os.path.join(bundle_dir, "lib/kindlegen/kindlegen.exe"))
     elif system_name == "Linux":
-        return os.path.abspath("lib/kindlegen/kindlegen-linux")
+        return os.path.abspath(os.path.join(bundle_dir, "lib/kindlegen/kindlegen-linux"))
     elif system_name == "Darwin":
-        return os.path.abspath("lib/kindlegen/kindlegen-macos")
+        return os.path.abspath(os.path.join(bundle_dir, "lib/kindlegen/kindlegen-macos"))
     else:
         print_log("不支持的操作系统")
 
 
 def run_bash(command):
     # print_log(command)
-    return subprocess.call(command, shell=True,stdout=subprocess.DEVNULL)
+    return subprocess.call(command, shell=True, stdout=subprocess.DEVNULL)
 
 
 def file_del(path):
