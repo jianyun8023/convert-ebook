@@ -18,6 +18,7 @@ before_install: |
     python --version
   fi
 install:
+  - pip install threadpool
   - pip install pyinstaller
 
 script:
