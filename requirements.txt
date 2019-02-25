@@ -1,2 +1,2 @@
 threadpool==1.3.2
-pyinstall==0.1.4
+pyinstaller==3.4
