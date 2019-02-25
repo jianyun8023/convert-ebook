@@ -23,8 +23,7 @@ install:
   # the parent CMD process).
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - "python -m pip install --upgrade pip"
-  - "%CMD_IN_ENV% pip install pyinstaller"
-  - "%CMD_IN_ENV% pip install threadpool"
+  - "%CMD_IN_ENV% pip install -r requirements.txt"
 build_script:
   # Build the compiled extension
   - ps: "ls"

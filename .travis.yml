@@ -18,8 +18,7 @@ before_install: |
     python --version
   fi
 install:
-  - pip install threadpool
-  - pip install pyinstaller
+  - pip install -r requirements.txt
 
 script:
   - pyinstaller ./convert-ebook.py -F --add-data ./lib/kindlegen:lib/kindlegen
