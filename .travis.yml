@@ -18,10 +18,11 @@ before_install: |
     python --version
   fi
 install:
-  - pip install -r requirements.txt
+  - python -m pip install --upgrade pip
+  - python -m pip install -r requirements.txt
 
 script:
-  - pyinstaller ./convert-ebook.py -F --add-data ./lib/kindlegen:lib/kindlegen
+  - python -m pyinstaller ./convert-ebook.py -F --add-data ./lib/kindlegen:lib/kindlegen
   - mv ./dist/convert-ebook ./dist/convert-ebook-$TRAVIS_OS_NAME
 
 deploy:
