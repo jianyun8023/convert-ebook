@@ -24,10 +24,11 @@ install:
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - "python -m pip install --upgrade pip"
   - "%CMD_IN_ENV% python -m pip install -r requirements.txt"
+  - "%CMD_IN_ENV% python -m pip install pyinstaller"
 build_script:
   # Build the compiled extension
   - ps: "ls"
-  - "%CMD_IN_ENV% python -m pyinstaller ./convert-ebook.py -F --add-data lib/kindlegen;lib/kindlegen"
+  - "%CMD_IN_ENV% pyinstaller ./convert-ebook.py -F --add-data lib/kindlegen;lib/kindlegen"
 test_script:
   - ps: "ls dist"
 artifacts:
