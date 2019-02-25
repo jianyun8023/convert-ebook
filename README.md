@@ -53,10 +53,18 @@
 
 
 ## 问题
-- 暂不支持epub直接转mobi，kindlegen转epub可能会导致输出的mobi文件中文乱码，暂未找到解决办法
+- 暂不支持epub直接转mobi，kindlegen转epub可能会导致输出的mobi文件中文乱码，~~暂未找到解决办法~~ 已经找到解决办法，后续增加epub->mobi
 - 暂未支持kindleunpack转换epub配置epub v2、v3、auto等参数
 
- 
+## 计划支持
+- 支持的转换流程
+   - azw3->mobi
+   - mobi->epub
+   - epub->mobi
+- 通过参数配置输出策略
+- 通过调用calibre-cli进行书库的批量转换，增加
+- calibre插件暂不考虑
+
 [latest-release]: https://github.com/Yihy/convert-ebook/releases/latest?svg=true
 [travis-ci]: https://travis-ci.org/Yihy/convert-ebook.svg?branch=master
 [appveyor]: https://ci.appveyor.com/api/projects/status/hsl74dpd01y3rsht?svg=true
