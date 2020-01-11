@@ -6,7 +6,7 @@ matrix:
     - os: linux
 language: python
 python:
-  - "3.5.1"
+  - "3.6"
 before_install: |
   if [ "$TRAVIS_OS_NAME" == "osx" ]; then
     alias python=$(which python3)
@@ -23,7 +23,7 @@ install:
   - python -m pip install pyinstaller
 
 script:
-  - pyinstaller ./__init__.py -F --add-data ./lib/kindlegen:lib/kindlegen
+  - pyinstaller ./__init__.py -F --add-data ./lib/kindlegen:lib/kindlegen -n convert-ebook
   - mv ./dist/convert-ebook ./dist/convert-ebook-$TRAVIS_OS_NAME
 
 deploy:

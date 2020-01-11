@@ -28,7 +28,7 @@ install:
 build_script:
   # Build the compiled extension
   - ps: "ls"
-  - "%CMD_IN_ENV% pyinstaller ./__init__.py -F --add-data lib/kindlegen;lib/kindlegen"
+  - "%CMD_IN_ENV% pyinstaller ./__init__.py -F --add-data lib/kindlegen;lib/kindlegen -n convert-ebook"
 test_script:
   - ps: "ls dist"
 artifacts:
