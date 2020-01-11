@@ -39,29 +39,40 @@
   
   ### 使用源码
   ```bash
-  # 第一次需要安装 threadpool
-  pip install threadpool
+  # 第一次需要安装依赖
+  pip install -r requirements.txt
   # 运行转换
   python ./convert-ebook.py "/doc/ebook/"
-  ```
- 如果不能使用`pip install threadpool`安装，请访问[threadpool主页](https://chrisarndt.de/projects/threadpool/)进行下载安装
- 
+  ``` 
 请使用python3运行脚本，未做python2的支持
  
  执行脚本后，会扫描该文件或该目录下所有的azw3文件（包括子目录），并执行转换。转换后的文件会写入到azw3所在的目录。如果写入时已经存在同名文件，旧文件会被覆盖掉。
  **默认同时处理cpu核心数*2个转换任务**
 
+## 参数
+<pre>
+positional arguments:
+  source                specify file or dir
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -t THREAD_COUNT, --thread_count THREAD_COUNT
+                        specify threadCount,default is cpu_count*2
+  -E EPUB_VERSION, --epub_version EPUB_VERSION
+                        specify EPUB version to unpack to: 2, 3 or A (for
+                        automatic) or F for Force to EPUB2, default is 2
+</pre>
 
 ## 问题
 - 暂不支持epub直接转mobi，kindlegen转epub可能会导致输出的mobi文件中文乱码，~~暂未找到解决办法~~ 已经找到解决办法，后续增加epub->mobi
-- 暂未支持kindleunpack转换epub配置epub v2、v3、auto等参数
+- ~~暂未支持kindleunpack转换epub配置epub v2、v3、auto等参数~~已支持
 
 ## 计划支持
 - 支持的转换流程
    - azw3->mobi
    - mobi->epub
    - epub->mobi
-- 通过参数配置输出策略
+- ~~通过参数配置输出策略~~已完成
 - 通过调用calibre-cli进行书库的批量转换，增加
 - calibre插件暂不考虑
 
