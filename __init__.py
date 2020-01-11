@@ -1,3 +1,5 @@
+from multiprocessing import cpu_count
+
 import utils
 from convertEbook import Config, main
 
@@ -7,6 +9,8 @@ def build_param():
     parser = argparse.ArgumentParser(description='convert-ebook')
     parser.add_argument('source', type=str, default=None,
                         help="specify file or dir")
+    parser.add_argument('-t', '--thread_count', type=int, default=cpu_count() * 2,
+                        help="specify threadCount,default is cpu_count*2")
     parser.add_argument('-E', '--epub_version', type=str,
                         default="2",
                         help="specify EPUB version to unpack to: 2, 3 or A (for automatic) or F for Force to EPUB2, default is 2")
@@ -15,6 +19,8 @@ def build_param():
 
     config.source = args.source
     config.epub_version = args.epub_version
+    config.thread_count = args.thread_count
+
     return config
 
 

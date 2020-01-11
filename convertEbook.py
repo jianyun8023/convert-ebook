@@ -1,20 +1,16 @@
 #! /usr/bin/python
 # -*- coding: UTF-8 -*-
+import json
 import os
 import shutil
-import subprocess
-import sys
-import tempfile
-import json
 import uuid
-from multiprocessing import cpu_count
-from utils import print_log, run_bash
 
 import threadpool
 
 import lib.kindleunpack as kindleunpack
 from lib.mobi_header import MobiHeader
 from lib.mobi_sectioner import Sectionizer
+from utils import print_log, run_bash
 
 
 class Config:
@@ -23,6 +19,7 @@ class Config:
     kindlegen_bin = ""
     bundle_dir = ""
     tmp_dir = ""
+    thread_count = 1
 
     def __str__(self) -> str:
         return json.dumps(self, default=lambda o: o.__dict__,
@@ -146,9 +143,9 @@ def list_file(path, filter, call_back):
             call_back(file_path)
 
 
-def main(config):
+def main(config: Config):
     source = config.source
-    pool = threadpool.ThreadPool(cpu_count() * 2)
+    pool = threadpool.ThreadPool(config.thread_count)
 
     function = lambda file_path: convert(os.path.abspath(file_path), config)
     call_back = lambda file_path: pool.putRequest(threadpool.makeRequests(function, {file_path})[0])
