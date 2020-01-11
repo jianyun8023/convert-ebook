@@ -1,14 +1,14 @@
 #! /usr/bin/python
 # -*- coding: UTF-8 -*-
 import os
-import platform
 import shutil
 import subprocess
 import sys
 import tempfile
-import time
+import json
 import uuid
 from multiprocessing import cpu_count
+from utils import print_log, run_bash
 
 import threadpool
 
@@ -16,36 +16,17 @@ import lib.kindleunpack as kindleunpack
 from lib.mobi_header import MobiHeader
 from lib.mobi_sectioner import Sectionizer
 
-tmp_dir = os.path.join(tempfile.gettempdir(), "convert_ebook")
 
-if getattr(sys, 'frozen', False):
-    # we are running in a bundle
-    bundle_dir = sys._MEIPASS
-else:
-    # we are running in a normal Python environment
-    bundle_dir = os.path.dirname(os.path.abspath(__file__))
+class Config:
+    source = ""
+    epub_version = ""
+    kindlegen_bin = ""
+    bundle_dir = ""
+    tmp_dir = ""
 
-
-def print_log(log):
-    date_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-    print(date_time + ' ' + log)
-
-
-def kindle_gen_bin():
-    system_name = platform.system()
-    if system_name == "Windows":
-        return os.path.abspath(os.path.join(bundle_dir, "lib/kindlegen/kindlegen.exe"))
-    elif system_name == "Linux":
-        return os.path.abspath(os.path.join(bundle_dir, "lib/kindlegen/kindlegen-linux"))
-    elif system_name == "Darwin":
-        return os.path.abspath(os.path.join(bundle_dir, "lib/kindlegen/kindlegen-macos"))
-    else:
-        print_log("不支持的操作系统")
-
-
-def run_bash(command):
-    # print_log(command)
-    return subprocess.call(command, shell=True, stdout=subprocess.DEVNULL)
+    def __str__(self) -> str:
+        return json.dumps(self, default=lambda o: o.__dict__,
+                          sort_keys=True, indent=4)
 
 
 def file_del(path):
@@ -72,9 +53,9 @@ def isKF8(file):
     return mh.isK8()
 
 
-def unpack_as_azw3(filepath, output_dir):
+def unpack_as_azw3(filepath, output_dir, config):
     kindleunpack.print = lambda str: str
-    kindleunpack.main(["-i", "-s", filepath, output_dir])
+    kindleunpack.main(["-i", "-s", "--epub_version=" + config.epub_version, filepath, output_dir])
 
 
 def find_suffix(dir, suffix):
@@ -96,8 +77,8 @@ def check_file(file):
     return True
 
 
-def convert_kf8_to_epub(file_path, tmp):
-    unpack_as_azw3(file_path, tmp)
+def convert_kf8_to_epub(file_path, tmp, config):
+    unpack_as_azw3(file_path, tmp, config)
     mobi8_dir = os.path.join(tmp, "mobi8")
     if not os.path.exists(mobi8_dir):
         print_log("[fail]解包文件失败[%s]" % file_path)
@@ -111,10 +92,8 @@ def convert_kf8_to_epub(file_path, tmp):
     return file
 
 
-def convert_epub_to_mobi(file_path, tmp):
-    exit_code = run_bash("%s -dont_append_source \"%s\"" % (kindle_gen_bin(), file_path))
-    if exit_code != 0:
-        return
+def convert_epub_to_mobi(file_path, config: Config):
+    exit_code = run_bash("%s -dont_append_source \"%s\"" % (config.kindlegen_bin, file_path))
     file = find_suffix(os.path.abspath(os.path.join(file_path, os.path.pardir)), ".mobi")
     if file and os.path.exists(file):
         print_log("[success]转换到mobi成功[%s]" % file_path)
@@ -123,37 +102,33 @@ def convert_epub_to_mobi(file_path, tmp):
     return file
 
 
-def convert(file_path, tmp):
-    if not check_file(file_path):
+def convert(source_file, config: Config):
+    if not check_file(source_file):
         return
 
     temp_dir_name = str(uuid.uuid1())
-    temp_dir = os.path.join(tmp, temp_dir_name)
+    temp_dir = os.path.join(config.tmp_dir, temp_dir_name)
     if os.path.exists(temp_dir):
-        # file_del(tmp)
-        shutil.rmtree(tmp_dir)
+        shutil.rmtree(temp_dir)
     os.makedirs(temp_dir)
 
-    print_log("转换[%s]到epub" % file_path)
-    epub_file = convert_kf8_to_epub(file_path, temp_dir)
+    print_log("转换[%s]到epub" % source_file)
+    epub_file = convert_kf8_to_epub(source_file, temp_dir, config)
 
-    is_azw3 = str(file_path).lower().endswith(".azw3")
+    is_azw3 = str(source_file).lower().endswith(".azw3")
 
-    file_source_suffix = ".azw3" if is_azw3 else file_path[file_path.rfind("."):]
+    file_source_suffix = ".azw3" if is_azw3 else source_file[source_file.rfind("."):]
 
     if epub_file:
-        file_copy(epub_file, file_path.replace(file_source_suffix, ".epub"))
+        file_copy(epub_file, source_file.replace(file_source_suffix, ".epub"))
 
     mobi_file = None
     if epub_file and is_azw3:
         print_log("转换epub到mobi [%s]" % epub_file)
-        mobi_file = convert_epub_to_mobi(epub_file, temp_dir)
-
-    # print_log(epub_file)
-    # print_log(mobi_file)
+        mobi_file = convert_epub_to_mobi(epub_file, config)
 
     if mobi_file:
-        file_copy(mobi_file, file_path.replace(file_source_suffix, ".mobi"))
+        file_copy(mobi_file, source_file.replace(file_source_suffix, ".mobi"))
 
 
 def list_file(path, filter, call_back):
@@ -171,20 +146,14 @@ def list_file(path, filter, call_back):
             call_back(file_path)
 
 
-if __name__ == '__main__':
-    if not len(sys.argv) > 1:
-        print_log("请输入扫描路径或文件")
-        exit(1)
-    file_source = sys.argv[1]
-
-    print_log("请输入扫描路径或文件 " + file_source)
-
+def main(config):
+    source = config.source
     pool = threadpool.ThreadPool(cpu_count() * 2)
 
-    fun = lambda file_path: convert(os.path.abspath(file_path), os.path.abspath(tmp_dir))
-    call_back = lambda file_path: pool.putRequest(threadpool.makeRequests(fun, {file_path})[0])
+    function = lambda file_path: convert(os.path.abspath(file_path), config)
+    call_back = lambda file_path: pool.putRequest(threadpool.makeRequests(function, {file_path})[0])
 
-    filter = lambda filename: filename.endswith(".azw3")
+    filter_file = lambda filename: filename.endswith(".azw3") | filename.endswith(".mobi")
 
-    list_file(file_source, filter, call_back)
+    list_file(source, filter_file, call_back)
     pool.wait()

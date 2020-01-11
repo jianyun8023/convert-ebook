@@ -23,7 +23,7 @@ install:
   - python -m pip install pyinstaller
 
 script:
-  - pyinstaller ./convert-ebook.py -F --add-data ./lib/kindlegen:lib/kindlegen
+  - pyinstaller ./__init__.py -F --add-data ./lib/kindlegen:lib/kindlegen
   - mv ./dist/convert-ebook ./dist/convert-ebook-$TRAVIS_OS_NAME
 
 deploy:
