@@ -5,7 +5,11 @@
 >使用python3编写的电子书格式转换工具,
 将未加解密的azw3格式无损转换epub,mobi
 > 支持MacOS、Windows、Linux平台。
-
+------------------------
+## *Update: 很久没更新这个工具了，以后应该也不会更新了。*
+一个更快，更好的工具 eCore,我常用来批量转换书籍。
+https://gist.github.com/jianyun8023/a4b8e9568f896a09e495fb5ff12f1d20
+------------------------
 
 ## 使用的开源工具
 - [kindleunpack](https://github.com/kevinhendricks/KindleUnpack) 转换azw3为epub
